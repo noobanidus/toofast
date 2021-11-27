@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "noobanidus.mods.toofast.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "toofast.refmap.json",
+  "mixins": [
+    "MixinServerNetPlayHandler"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
