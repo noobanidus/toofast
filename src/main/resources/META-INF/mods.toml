@@ -1,0 +1,25 @@
+modLoader="javafml" 
+loaderVersion="[38,)"
+issueTrackerURL="https://github.com/noobanidus/TooFast/issues"
+license="https://github.com/noobanidus/TooFast/blob/1.18/LICENSE"
+[[mods]] 
+modId="toofast"
+version="${version}"
+displayName="Too Fast"
+displayURL="https://minecraft.curseforge.com/projects/too-fast"
+authors="Noobanidus"
+description='''
+Disables "moved too quickly".
+'''
+[[dependencies.TooFast]]
+    modId="forge" 
+    mandatory=true 
+    versionRange="[38,)"
+    ordering="NONE"
+    side="SERVER"
+[[dependencies.TooFast]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.18,)"
+    ordering="NONE"
+    side="SERVER"
