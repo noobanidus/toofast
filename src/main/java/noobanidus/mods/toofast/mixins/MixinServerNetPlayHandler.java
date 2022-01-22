@@ -1,11 +1,11 @@
 package noobanidus.mods.toofast.mixins;
 
-import net.minecraft.network.play.ServerPlayNetHandler;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(ServerPlayNetHandler.class)
+@Mixin(ServerGamePacketListenerImpl.class)
 public class MixinServerNetPlayHandler {
   @ModifyConstant(method = "handleMovePlayer", constant = @Constant(floatValue = 100.0F))
   private float toofast_PlayerMaxSpeed(float speed) {
