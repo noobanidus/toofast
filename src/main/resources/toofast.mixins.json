@@ -1,15 +1,12 @@
 {
   "required": true,
-  "package": "noobanidus.mods.toofast.mixins",
-  "compatibilityLevel": "JAVA_8",
-  "refmap": "toofast.refmap.json",
+  "minVersion": "0.8",
+  "package": "net.zestyblaze.toofast.mixin",
+  "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "MixinServerNetPlayHandler"
-  ],
-  "client": [
+    "ServerPlayNetPlayMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "minVersion": "0.8"
+  }
 }
