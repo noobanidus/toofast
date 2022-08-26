@@ -2,9 +2,8 @@
   "schemaVersion": 1,
   "id": "toofast",
   "version": "${version}",
-
   "name": "TooFast",
-  "description": "Disables 'moved too quickly' for recent versions of Minecraft.",
+  "description": "Disables moved too quickly for recent versions of Minecraft.",
   "authors": [
     "ZestyBlaze",
     "noobanidus"
@@ -14,19 +13,16 @@
     "sources": "https://github.com/noobanidus/toofast/tree/master",
     "issues": "https://github.com/noobanidus/toofast/issues"
   },
-
   "license": "MIT License",
   "icon": "icon.png",
-
   "environment": "*",
   "mixins": [
-    "toofast.mixins.json"
+    "toofast-common.mixins.json"
   ],
-
   "depends": {
     "fabricloader": ">=0.12.12",
     "fabric": "*",
-    "minecraft": "1.19.x",
+    "minecraft": ">=1.19.2",
     "java": ">=17"
   }
 }

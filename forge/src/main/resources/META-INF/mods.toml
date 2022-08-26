@@ -1,0 +1,28 @@
+modLoader = "javafml"
+loaderVersion = "[43,)"
+issueTrackerURL = "https://github.com/noobanidus/toofast/issues"
+license = "MIT License"
+
+[[mods]]
+modId = "toofast"
+version = "${version}"
+displayName = "TooFast"
+authors = "ZestyBlaze and noobanidus"
+description = '''
+Disables moved too quickly for recent versions of Minecraft.
+'''
+logoFile = "icon.png"
+
+[[dependencies.toofast]]
+modId = "forge"
+mandatory = true
+versionRange = "[43,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.toofast]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.19.2,)"
+ordering = "NONE"
+side = "BOTH"
