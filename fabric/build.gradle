@@ -1,0 +1,120 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version "1.15-SNAPSHOT"
+}
+
+repositories {
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "ParchmentMC"
+                url = "https://maven.parchmentmc.org"
+            }
+        }
+        filter {
+            includeGroupAndSubgroups("org.parchmentmc")
+        }
+    }
+    exclusiveContent {
+        forRepository {
+            maven {
+                url = "https://maven.terraformersmc.com/releases"
+            }
+        }
+        filter {
+            includeGroupAndSubgroups("com.terraformersmc")
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    compileOnly(project.project(":common")) {
+        transitive = false
+    }
+
+    implementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
+
+
+loom {
+    mods {
+        "${mod_id}" {
+            // Tell Loom about each source set used by your mod here. This ensures that your mod's classes are properly transformed by Loader.
+            sourceSet sourceSets.main
+            sourceSet project.project(":common").sourceSets.main
+        }
+    }
+
+    def awFile = project.file("src/main/resources/${mod_id}.accesswidener")
+    if (awFile.exists()) {
+        accessWidenerPath.set(awFile)
+    }
+
+    mixin {
+        useLegacyMixinAp = false
+    }
+
+    runs {
+        configureEach {
+            runDir("run")
+            ideConfigGenerated(true)
+        }
+
+        client {
+            client()
+            setConfigName("Fabric Client")
+
+            if (project.hasProperty('mc_uuid')) {
+                programArg("--uuid=${project.findProperty('mc_uuid')}")
+            }
+
+            if (project.hasProperty('mc_username')) {
+                programArg("--username=${project.findProperty('mc_username')}")
+            }
+
+            if (project.hasProperty('mc_java_agent_path')) {
+                vmArg("-javaagent:${project.findProperty('mc_java_agent_path')}")
+            }
+        }
+
+        server {
+            server()
+            setConfigName("Fabric Server")
+        }
+    }
+}
+
+tasks.named("compileJava", JavaCompile) {
+    source(project.project(":common").sourceSets.main.allJava)
+}
+
+tasks.named("javadoc", Javadoc).configure {
+    source(project.project(":common").sourceSets.main.allJava)
+}
+
+tasks.named("sourcesJar", Jar) {
+    from(project.project(":common").sourceSets.main.allSource)
+}
+
+processResources {
+    from project.project(":common").sourceSets.main.resources
+
+    filesMatching("assets/**/blockstates/*.json") {
+        filter { String line ->
+            line.replaceAll(/"type"\s*:/, '"fabric:type":')
+        }
+    }
+
+    from("../datapacks") {
+        into("resourcepacks")
+        include("lootr_no_advancements/**")
+        include("lootr_no_suspicious_blocks/**")
+        exclude("**/.cache/**")
+    }
+}
+
+tasks.build.mustRunAfter tasks.clean
+tasks.publish.mustRunAfter tasks.build
+tasks.publishMods.mustRunAfter tasks.publish
+tasks.buildAndRelease.dependsOn(tasks.clean, tasks.build, tasks.publish, tasks.publishMods)
