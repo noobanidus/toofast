@@ -13,6 +13,10 @@ configurations.configureEach {
     }
 }
 
+base {
+    archivesName.set("${rootProject.mod_id}-universal")
+}
+
 configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
@@ -85,7 +89,7 @@ publishMods {
     ]
 
     if (project.hasProperty('curseforge_id')) {
-        curseforge('curseforg') {
+        curseforge('curseforge') {
 
             projectSlug = "too-fast"
             type = STABLE
