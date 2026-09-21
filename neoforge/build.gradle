@@ -162,8 +162,6 @@ publishMods {
             announcementTitle = "Too Fast ${rootProject.minecraft_version}-${rootProject.mod_version} for NeoForge on Modrinth"
             minecraftVersions.add(project.minecraft_version)
             changelog = changelogText
-            client = false
-            server = true
 
             dependencies {
                 uploadDependencies.each { dep, required ->
