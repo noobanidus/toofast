@@ -101,3 +101,84 @@ tasks.build.mustRunAfter tasks.clean
 tasks.publish.mustRunAfter tasks.build
 tasks.publishMods.mustRunAfter tasks.publish
 tasks.buildAndRelease.dependsOn(tasks.clean, tasks.build, tasks.publish, tasks.publishMods)
+
+publishMods {
+    apply from: "../gradle/property_helper.gradle"
+
+    file = tasks.jar.archiveFile
+    //modLoaders.add("fabric")
+    modLoaders.add("neoforge")
+
+    var env = System.getenv()
+
+    def utils = project.objects.newInstance(ExecUtils)
+
+    def gitRepo = utils.getExecOutput(['git', 'remote', 'get-url', 'origin'])
+    def gitCommit = utils.getExecOutput(['git', 'log', '-n', '1', '--pretty=tformat:%h'])
+    def gitPrevCommit = project.findProperty("git_previous_commit") ?: env["GIT_PREVIOUS_COMMIT"]
+
+    var changelogText = ""
+
+    if (gitCommit && gitPrevCommit) {
+        changelogText += utils.getExecOutput(['git', 'log', "--pretty=tformat:- %s [(%h)](${gitRepo}/commit/%h)", '' + gitPrevCommit + '..' + gitCommit])
+    }
+
+    // Limit the changelog to 500 characters
+    changelogText = changelogText.take(500)
+
+    def uploadDependencies = [
+    ]
+
+    if (project.hasProperty('curseforge_id')) {
+        curseforge('curseforge') {
+
+            projectSlug = "too-fast-neoforge"
+            type = STABLE
+            displayName = "too-fast-neoforge-${rootProject.minecraft_version}-${rootProject.mod_version}"
+            accessToken = project.findProperty("curse_auth")
+            projectId = project.findProperty('curseforge_id')
+            announcementTitle = "Too Fast ${rootProject.minecraft_version}-${rootProject.mod_version} for NeoForge on CurseForge"
+            minecraftVersions.add(project.minecraft_version)
+            changelog = changelogText
+
+            uploadDependencies.each { dep, required ->
+                if (required) {
+                    requires(dep)
+                } else {
+                    optional(dep)
+                }
+            }
+        }
+    }
+
+    if (project.hasProperty('modrinth_id')) {
+        modrinth('modrinth') {
+            type = STABLE
+            displayName = "too-fast-neoforge-${rootProject.minecraft_version}-${rootProject.mod_version}"
+            accessToken = project.findProperty("modrinth_auth")
+            projectId = project.findProperty('modrinth_id')
+            announcementTitle = "Too Fast ${rootProject.minecraft_version}-${rootProject.mod_version} for NeoForge on Modrinth"
+            minecraftVersions.add(project.minecraft_version)
+            changelog = changelogText
+
+            dependencies {
+                uploadDependencies.each { dep, required ->
+                    if (required) {
+                        requires(dep)
+                    } else {
+                        optional(dep)
+                    }
+                }
+            }
+        }
+    }
+
+    if (project.hasProperty("curse_discord_webhook")) {
+        discord {
+            webhookUrl = project.findProperty("curse_discord_webhook")
+            username = "Too Fast Update"
+            content = "A new version of Too Fast for NeoForge has been released!\n\n${changelogText.take(500)}"
+        }
+    }
+}
+
