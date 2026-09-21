@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "toofast",
+  "version": "${version}",
+  "name": "Too Fast",
+  "description": "Disables 'moved too quickly'.",
+  "authors": [
+    "Noobanidus"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/too-fast",
+    "sources": "https://github.com/noobanidus/toofast",
+    "issues": "https://github.com/noobanidus/toofast/issues"
+  },
+  "license": "MIT License",
+  "icon": "icon.png",
+  "environment": "*",
+  "mixins": [
+    "toofast.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.5",
+    "fabric": ">=0.144",
+    "minecraft": "${minecraft_version}",
+    "java": ">=25"
+  }
+}
